@@ -1,0 +1,2199 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Các Trò Giải Trí Hay</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101614;
+      --panel: #17211d;
+      --panel-2: #1f2b27;
+      --text: #f5f2e9;
+      --muted: #b8b0a3;
+      --gold: #ffd348;
+      --green: #49d17d;
+      --red: #f36d6d;
+      --line: rgba(255, 255, 255, 0.12);
+      --card-back: repeating-linear-gradient(45deg, #b91c1c 0 8px, #7f1d1d 8px 16px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(73, 209, 125, 0.14), transparent 32rem),
+        linear-gradient(135deg, #101614, #1b1815);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.38;
+    }
+
+    .screen {
+      min-height: 100vh;
+      padding: 24px;
+      display: none;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .welcome {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .start-box {
+      width: min(440px, 100%);
+      padding: 26px;
+      border: 1px solid var(--line);
+      background: rgba(23, 33, 29, 0.9);
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 7vw, 4.5rem);
+      line-height: 1;
+      color: var(--gold);
+      text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .credit {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .mode-box {
+      margin-top: 26px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mode {
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      text-align: left;
+    }
+
+    .mode.selected {
+      border-color: var(--gold);
+      box-shadow: inset 0 0 0 1px var(--gold);
+    }
+
+    .mode.locked {
+      color: var(--muted);
+    }
+
+    .primary {
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 8px;
+      background: var(--gold);
+      color: #1b1400;
+      font-weight: 800;
+    }
+
+    .secondary {
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: #2b3833;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .setup,
+    .table,
+    .winner-screen {
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .wrap {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .topbar h2 {
+      color: var(--gold);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: rgba(23, 33, 29, 0.92);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .add-form {
+      display: grid;
+      grid-template-columns: minmax(160px, 1fr) 180px auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input,
+    select {
+      min-height: 42px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #0f1714;
+      color: var(--text);
+      padding: 0 12px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--gold);
+    }
+
+    .players-list {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .mini-player {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #111a17;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #28362f;
+      font-size: 1.7rem;
+      flex: 0 0 auto;
+      position: relative;
+    }
+
+    .mini-player strong,
+    .player-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .remove {
+      margin-left: auto;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #3d2424;
+      color: #ffd2d2;
+      font-weight: 800;
+    }
+
+    .setup-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .deck-row {
+      min-height: 96px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 66px;
+      height: 92px;
+      border-radius: 8px;
+      background: var(--card-back);
+      border: 3px solid #f8efe2;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+    }
+
+    .dealing .deck {
+      animation: deckPulse 0.45s ease-in-out infinite alternate;
+    }
+
+    @keyframes deckPulse {
+      from { transform: translateY(0) rotate(-2deg); }
+      to { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .player-card {
+      position: relative;
+      min-height: 265px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(15, 23, 20, 0.94);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      overflow: hidden;
+    }
+
+    .player-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .score {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .cards {
+      display: flex;
+      gap: 8px;
+      min-height: 118px;
+      align-items: center;
+    }
+
+    .card {
+      width: 72px;
+      height: 104px;
+      border-radius: 8px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      display: block;
+      position: relative;
+      padding: 0;
+      perspective: 800px;
+    }
+
+    .card-inner {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.5s ease;
+    }
+
+    .card.hidden .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card.revealed .card-inner {
+      transform: rotateY(0deg);
+    }
+
+    .card.just-flipped .card-inner {
+      animation: flipCard 0.58s ease both;
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.86);
+      display: grid;
+      place-items: center;
+      backface-visibility: hidden;
+      box-shadow: 0 9px 16px rgba(0, 0, 0, 0.28);
+    }
+
+    .card-front {
+      background: #f8f3ea;
+      color: #151515;
+    }
+
+    .card-back {
+      background: var(--card-back);
+      transform: rotateY(180deg);
+    }
+
+    .card-back::after {
+      content: "?";
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    .card.deal-in {
+      animation: dealIn 0.5s ease both;
+    }
+
+    @keyframes dealIn {
+      from {
+        opacity: 0;
+        transform: translateY(-64px) scale(0.72) rotate(-8deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0);
+      }
+    }
+
+    @keyframes flipCard {
+      from { transform: rotateY(180deg); }
+      to { transform: rotateY(0deg); }
+    }
+
+    .flying-card {
+      position: fixed;
+      left: var(--x);
+      top: var(--y);
+      width: var(--fly-w, 66px);
+      height: var(--fly-h, 92px);
+      border-radius: 8px;
+      background: var(--card-back);
+      border: 3px solid #f8efe2;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0;
+      animation: flyDeal 0.72s cubic-bezier(0.18, 0.78, 0.28, 1) forwards;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes flyDeal {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.6) rotate(0deg);
+      }
+      12% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.95;
+        transform: translate(var(--tx), var(--ty)) scale(0.82) rotate(var(--rot));
+      }
+    }
+
+    .rank {
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    .suit {
+      position: absolute;
+      right: 8px;
+      bottom: 6px;
+      font-size: 1.3rem;
+    }
+
+    .red {
+      color: #d01818;
+    }
+
+    .black {
+      color: #111;
+    }
+
+    .badge {
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.72);
+      color: var(--gold);
+      font-weight: 900;
+      letter-spacing: 0;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .badge.show {
+      animation: badgePop 1s ease both;
+    }
+
+    .badge.loser {
+      color: #ff9d9d;
+    }
+
+    @keyframes badgePop {
+      0% { opacity: 0; transform: translate(-50%, 16px) scale(0.5); }
+      45% { opacity: 1; transform: translate(-50%, -6px) scale(1.2); }
+      100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    }
+
+    .status {
+      min-height: 22px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .status.wait {
+      color: var(--muted);
+    }
+
+    .winner-screen {
+      align-items: center;
+    }
+
+    .winner-box {
+      width: min(520px, 100%);
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid rgba(255, 211, 72, 0.32);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at top, rgba(255, 211, 72, 0.16), transparent 210px),
+        rgba(23, 33, 29, 0.94);
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
+    }
+
+    .winner-avatar {
+      width: 118px;
+      height: 118px;
+      margin: 0 auto 16px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 211, 72, 0.16);
+      border: 3px solid var(--gold);
+      font-size: 4rem;
+      animation: winnerPop 0.8s cubic-bezier(0.18, 0.86, 0.25, 1.2) both;
+      box-shadow:
+        0 0 0 8px rgba(255, 211, 72, 0.08),
+        0 0 42px rgba(255, 211, 72, 0.28);
+    }
+
+    .winner-box h2 {
+      color: var(--gold);
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      line-height: 1;
+    }
+
+    .winner-name {
+      margin-top: 10px;
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      font-weight: 900;
+      overflow-wrap: anywhere;
+    }
+
+    .winner-subtitle {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .winner-actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @keyframes winnerPop {
+      0% { opacity: 0; transform: translateY(22px) scale(0.45) rotate(-8deg); }
+      55% { opacity: 1; transform: translateY(-8px) scale(1.12) rotate(4deg); }
+      100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .roulette-info {
+      display: grid;
+      gap: 12px;
+    }
+
+    .roulette-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .turn-name {
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    #rouletteTurn {
+      font-size: 1.14rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    #rouletteTurn .turn-name {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: rgba(255, 211, 72, 0.13);
+      border: 1px solid rgba(255, 211, 72, 0.35);
+      color: var(--gold);
+      font-size: 1.22rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.38);
+    }
+
+    .shell-strip,
+    .item-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .shell-label {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #111a17;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .shell {
+      width: 18px;
+      height: 32px;
+      border-radius: 8px 8px 3px 3px;
+      background: linear-gradient(#c52b2b 0 70%, #caa15c 70% 100%);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    .shell.peek-live {
+      background: linear-gradient(#ef4444 0 70%, #caa15c 70% 100%);
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.28), inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    .shell.peek-blank {
+      background: linear-gradient(#e5e7eb 0 70%, #caa15c 70% 100%);
+      box-shadow: 0 0 0 2px rgba(229, 231, 235, 0.24), inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    .item-btn {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #111a17;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .item-btn span {
+      font-size: 1.15rem;
+    }
+
+    .beer-reveal {
+      min-height: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .beer-reveal.show {
+      min-height: 104px;
+      display: flex;
+      padding: 4px 0;
+    }
+
+    .reveal-shell {
+      position: relative;
+      width: 54px;
+      height: 92px;
+      border-radius: 22px 22px 7px 7px;
+      border: 2px solid rgba(255, 255, 255, 0.62);
+      box-shadow:
+        inset 0 -10px 0 rgba(0, 0, 0, 0.24),
+        0 16px 30px rgba(0, 0, 0, 0.32);
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(0deg);
+    }
+
+    .reveal-shell.animate {
+      animation: beerShellReveal 0.92s cubic-bezier(0.18, 0.82, 0.24, 1) both;
+    }
+
+    .reveal-shell::before,
+    .reveal-shell::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .reveal-shell::before {
+      left: 10px;
+      right: 10px;
+      bottom: 5px;
+      height: 12px;
+      border-radius: 999px;
+      background: #d7a856;
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.22);
+    }
+
+    .reveal-shell.live {
+      background: linear-gradient(#ff2d2d 0 70%, #d7a856 70% 100%);
+      box-shadow:
+        0 0 0 4px rgba(239, 68, 68, 0.2),
+        0 0 34px rgba(239, 68, 68, 0.62),
+        inset 0 -10px 0 rgba(0, 0, 0, 0.24);
+    }
+
+    .reveal-shell.live::after {
+      right: -40px;
+      top: 14px;
+      width: 54px;
+      height: 54px;
+      background: var(--gold);
+      clip-path: polygon(0 50%, 100% 4%, 72% 50%, 100% 96%);
+      filter: drop-shadow(0 0 14px rgba(255, 211, 72, 0.8));
+      opacity: 0.72;
+      transform: scale(1);
+    }
+
+    .reveal-shell.animate.live::after {
+      animation: revealFlash 0.42s ease 0.28s both;
+    }
+
+    .reveal-shell.blank {
+      background: linear-gradient(#e5e7eb 0 70%, #d7a856 70% 100%);
+      box-shadow:
+        0 0 0 4px rgba(229, 231, 235, 0.18),
+        0 0 28px rgba(229, 231, 235, 0.32),
+        inset 0 -10px 0 rgba(0, 0, 0, 0.24);
+    }
+
+    .reveal-shell.blank::after {
+      left: 50%;
+      top: 32%;
+      width: 28px;
+      height: 28px;
+      border: 5px solid rgba(17, 24, 39, 0.78);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.32);
+      opacity: 1;
+    }
+
+    .reveal-shell.animate.blank::after {
+      animation: blankPulse 0.72s ease 0.25s both;
+    }
+
+    .beer-bubble {
+      position: absolute;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: rgba(255, 224, 130, 0.86);
+      opacity: 0;
+    }
+
+    .reveal-shell.animate .beer-bubble {
+      animation: beerBubble 0.92s ease both;
+    }
+
+    .beer-bubble:nth-child(1) {
+      left: -24px;
+      bottom: 6px;
+      animation-delay: 0.08s;
+    }
+
+    .beer-bubble:nth-child(2) {
+      right: -22px;
+      bottom: 20px;
+      width: 10px;
+      height: 10px;
+      animation-delay: 0.16s;
+    }
+
+    .beer-bubble:nth-child(3) {
+      left: 50%;
+      top: -10px;
+      width: 9px;
+      height: 9px;
+      animation-delay: 0.24s;
+    }
+
+    .roulette-arena {
+      --ring-radius: min(34vw, 255px);
+      position: relative;
+      width: min(760px, 100%);
+      aspect-ratio: 1;
+      min-height: 420px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at center, rgba(255, 211, 72, 0.12), transparent 120px),
+        linear-gradient(135deg, rgba(17, 26, 23, 0.96), rgba(30, 22, 19, 0.96));
+    }
+
+    .table-circle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(360px, 58%);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255, 211, 72, 0.12), transparent 38%),
+        radial-gradient(circle, #37241c 0 58%, #231714 59% 100%);
+      border: 10px solid #4d2c1f;
+      box-shadow:
+        inset 0 10px 24px rgba(255, 255, 255, 0.05),
+        inset 0 -18px 32px rgba(0, 0, 0, 0.36),
+        0 22px 44px rgba(0, 0, 0, 0.34);
+      z-index: 1;
+    }
+
+    .roulette-player {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 126px;
+      min-height: 112px;
+      padding: 9px;
+      display: grid;
+      gap: 6px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(15, 23, 20, 0.9);
+      transform: translate(-50%, -50%) rotate(var(--slot-angle)) translate(var(--ring-radius)) rotate(var(--slot-angle-back));
+      transition: border-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      z-index: 2;
+      overflow: visible;
+    }
+
+    .roulette-player.alive {
+      cursor: pointer;
+    }
+
+    .roulette-player.current {
+      border-color: var(--gold);
+      background: rgba(38, 34, 18, 0.96);
+      box-shadow:
+        0 0 0 3px rgba(255, 211, 72, 0.42),
+        0 0 24px rgba(255, 211, 72, 0.22);
+    }
+
+    .roulette-player.target {
+      border-color: var(--red);
+      box-shadow: 0 0 0 2px rgba(243, 109, 109, 0.24);
+    }
+
+    .roulette-player.out {
+      opacity: 0.46;
+      filter: grayscale(1);
+    }
+
+    .roulette-player.out.dead-now {
+      opacity: 0.9;
+      filter: none;
+    }
+
+    .roulette-player.winner {
+      border-color: var(--green);
+      box-shadow: 0 0 0 2px rgba(73, 209, 125, 0.24);
+    }
+
+    .roulette-player .avatar {
+      width: 54px;
+      height: 54px;
+      font-size: 1.9rem;
+    }
+
+    .roulette-player > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .roulette-player.dead-now::before,
+    .roulette-player.dead-now::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .roulette-player.dead-now::before {
+      background:
+        radial-gradient(circle at 20% 25%, rgba(190, 18, 60, 0.95) 0 7px, transparent 8px),
+        radial-gradient(circle at 72% 38%, rgba(127, 29, 29, 0.95) 0 9px, transparent 10px),
+        radial-gradient(circle at 44% 76%, rgba(239, 68, 68, 0.9) 0 11px, transparent 12px);
+      animation: bloodBurst 0.8s ease both;
+    }
+
+    .roulette-player.dead-now::after {
+      border: 3px solid rgba(239, 68, 68, 0.82);
+      animation: bloodRing 0.75s ease both;
+    }
+
+    .blood-splash {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      width: 118px;
+      height: 86px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0;
+      background:
+        radial-gradient(circle at 18% 52%, rgba(220, 38, 38, 0.96) 0 7px, transparent 8px),
+        radial-gradient(circle at 38% 24%, rgba(153, 27, 27, 0.98) 0 10px, transparent 11px),
+        radial-gradient(circle at 56% 66%, rgba(239, 68, 68, 0.92) 0 8px, transparent 9px),
+        radial-gradient(circle at 76% 38%, rgba(127, 29, 29, 0.95) 0 6px, transparent 7px);
+      filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.22));
+      animation: bloodSplash 0.72s ease both;
+    }
+
+    .roulette-player strong {
+      width: 100%;
+      text-align: center;
+      overflow-wrap: anywhere;
+      font-size: 1.08rem;
+      line-height: 1.05;
+    }
+
+    .hp {
+      display: flex;
+      gap: 3px;
+      min-height: 18px;
+      color: var(--red);
+      font-size: 1.08rem;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .power-tag {
+      min-height: 18px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      border-radius: 999px;
+      background: rgba(255, 211, 72, 0.14);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .player-state {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .shotgun-stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 196px;
+      height: 74px;
+      transform: translate(-50%, -50%) rotate(var(--gun-angle));
+      transform-origin: 50% 50%;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .shotgun-stage.shooting {
+      animation: aimGun 0.58s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .shotgun {
+      position: absolute;
+      left: 34px;
+      top: 50%;
+      width: 150px;
+      height: 46px;
+      transform: translateY(-50%);
+    }
+
+    .shotgun-stage.shooting .shotgun {
+      animation: shotgunRecoil 0.26s ease 0.5s;
+    }
+
+    .barrel,
+    .barrel.second {
+      position: absolute;
+      left: 48px;
+      width: 96px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #9ca3af, #f3f4f6, #6b7280);
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .barrel {
+      top: 14px;
+    }
+
+    .barrel.second {
+      top: 24px;
+    }
+
+    .stock {
+      position: absolute;
+      left: 1px;
+      top: 16px;
+      width: 58px;
+      height: 25px;
+      border-radius: 16px 8px 14px 18px;
+      background: linear-gradient(135deg, #7c2d12, #c56b34);
+      transform: skewX(-18deg);
+    }
+
+    .grip {
+      position: absolute;
+      left: 45px;
+      top: 29px;
+      width: 20px;
+      height: 28px;
+      border-radius: 4px 4px 12px 12px;
+      background: #5b2110;
+      transform: rotate(-18deg);
+    }
+
+    .trigger {
+      position: absolute;
+      left: 65px;
+      top: 29px;
+      width: 19px;
+      height: 14px;
+      border: 3px solid #d1d5db;
+      border-top: 0;
+      border-radius: 0 0 16px 16px;
+    }
+
+    .muzzle-flash {
+      position: absolute;
+      right: -13px;
+      top: 10px;
+      width: 32px;
+      height: 32px;
+      background: var(--gold);
+      clip-path: polygon(0 50%, 100% 0, 72% 50%, 100% 100%);
+      opacity: 0;
+    }
+
+    .shotgun-stage.shooting .muzzle-flash {
+      animation: muzzleFlash 0.18s ease 0.55s;
+    }
+
+    @keyframes aimGun {
+      from { transform: translate(-50%, -50%) rotate(var(--gun-from)); }
+      to { transform: translate(-50%, -50%) rotate(var(--gun-angle)); }
+    }
+
+    @keyframes shotgunRecoil {
+      0% { transform: translateY(-50%) translateX(0); }
+      45% { transform: translateY(-50%) translateX(-17px); }
+      100% { transform: translateY(-50%) translateX(0); }
+    }
+
+    @keyframes muzzleFlash {
+      0% { opacity: 0; transform: scale(0.6); }
+      45% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+
+    @keyframes bloodBurst {
+      0% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+      45% { opacity: 1; transform: scale(1.35) rotate(18deg); }
+      100% { opacity: 0.92; transform: scale(1.08) rotate(8deg); }
+    }
+
+    @keyframes bloodRing {
+      0% { opacity: 0.9; transform: scale(0.4); }
+      100% { opacity: 0; transform: scale(1.8); }
+    }
+
+    @keyframes bloodSplash {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2) rotate(-10deg);
+      }
+      18% {
+        opacity: 1;
+        transform: translate(-50%, -56%) scale(1.18) rotate(8deg);
+      }
+      68% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(1) rotate(2deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -42%) scale(1.12) rotate(2deg);
+      }
+    }
+
+    @keyframes beerShellReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(28px) scale(0.58) rotate(-12deg);
+      }
+      42% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.15) rotate(6deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes revealFlash {
+      0% { opacity: 0; transform: scale(0.2); }
+      45% { opacity: 1; transform: scale(1.15); }
+      100% { opacity: 0.72; transform: scale(1); }
+    }
+
+    @keyframes blankPulse {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+      55% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes beerBubble {
+      0% { opacity: 0; transform: translateY(18px) scale(0.4); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-42px) scale(1); }
+    }
+
+    @media (max-width: 640px) {
+      .screen {
+        padding: 14px;
+      }
+
+      .add-form {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        width: 62px;
+        height: 92px;
+      }
+
+      .rank {
+        font-size: 1.7rem;
+      }
+
+      .roulette-arena {
+        --ring-radius: min(32vw, 170px);
+        min-height: 340px;
+      }
+
+      .roulette-player {
+        width: 98px;
+        min-height: 98px;
+        padding: 7px;
+      }
+
+      .roulette-player .avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 1.55rem;
+      }
+
+      .shotgun-stage {
+        width: 152px;
+        height: 58px;
+      }
+
+      .shotgun {
+        left: 24px;
+        transform: translateY(-50%) scale(0.78);
+        transform-origin: left center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="welcomeScreen" class="screen welcome active">
+    <section class="start-box">
+      <h1>Các Trò Giải Trí Hay</h1>
+      <p class="credit">by Phước Nhân cu to</p>
+      <div class="mode-box" aria-label="Chọn chế độ">
+        <button class="mode" data-mode="baicao" type="button">Bài Cào</button>
+        <button class="mode" data-mode="roulette" type="button">Cò quay nga</button>
+        <button id="playBtn" class="primary" type="button" disabled>PLAY</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="setupScreen" class="screen setup">
+    <section class="wrap">
+      <div class="topbar">
+        <h2 id="setupTitle">Thêm người chơi</h2>
+        <button id="backHomeBtn" class="secondary" type="button">Về màn hình chờ</button>
+      </div>
+
+      <div class="panel">
+        <form id="playerForm" class="add-form">
+          <input id="playerName" type="text" maxlength="24" placeholder="Tên người chơi" autocomplete="off">
+          <select id="avatarSelect" aria-label="Chọn avatar"></select>
+          <button id="addPlayerBtn" class="primary" type="submit">Thêm</button>
+        </form>
+        <div id="playersList" class="players-list"></div>
+      </div>
+
+      <div class="setup-actions panel">
+        <p id="setupHint" class="hint">Cần ít nhất 2 người chơi để bắt đầu.</p>
+        <button id="startGameBtn" class="primary" type="button" disabled>Bắt đầu</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="tableScreen" class="screen table">
+    <section class="wrap">
+      <div class="topbar">
+        <h2 id="tableTitle">Bài Cào</h2>
+        <div>
+          <button id="tableHomeBtn" class="secondary" type="button">Màn hình chính</button>
+          <button id="newRoundBtn" class="secondary" type="button">Ván mới</button>
+          <button id="changePlayersBtn" class="secondary" type="button">Đổi người chơi</button>
+        </div>
+      </div>
+
+      <div id="deckArea" class="panel deck-row">
+        <div class="deck" aria-label="Bộ bài"></div>
+      </div>
+
+      <div id="gameGrid" class="game-grid"></div>
+    </section>
+  </main>
+
+  <main id="rouletteScreen" class="screen table">
+    <section class="wrap">
+      <div class="topbar">
+        <h2>Cò quay nga</h2>
+        <div>
+          <button id="rouletteHomeBtn" class="secondary" type="button">Màn hình chính</button>
+          <button id="rouletteNewRoundBtn" class="secondary" type="button">Ván mới</button>
+          <button id="rouletteChangePlayersBtn" class="secondary" type="button">Đổi người chơi</button>
+        </div>
+      </div>
+
+      <div class="panel roulette-info">
+        <div class="roulette-line">
+          <p id="rouletteTurn">Chưa bắt đầu</p>
+          <p id="rouletteShellInfo" class="hint"></p>
+        </div>
+        <div id="shellStrip" class="shell-strip"></div>
+        <div id="beerReveal" class="beer-reveal" aria-hidden="true"></div>
+        <p id="rouletteMessage" class="status wait"></p>
+        <div class="action-row">
+          <button id="shootBtn" class="primary" type="button">Bắn</button>
+          <div id="itemBar" class="item-bar"></div>
+        </div>
+      </div>
+
+      <div id="rouletteArena" class="roulette-arena"></div>
+    </section>
+  </main>
+
+  <main id="rouletteWinnerScreen" class="screen winner-screen">
+    <section class="winner-box">
+      <div id="winnerAvatar" class="winner-avatar">👑</div>
+      <h2>Người thắng</h2>
+      <p id="winnerName" class="winner-name"></p>
+      <p id="winnerSubtitle" class="winner-subtitle">Sống sót cuối cùng trong Cò quay nga.</p>
+      <div class="winner-actions">
+        <button id="winnerReplayBtn" class="primary" type="button">Chơi lại</button>
+        <button id="winnerHomeBtn" class="secondary" type="button">Màn hình chính</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const suits = [
+      { symbol: "♠", color: "black" },
+      { symbol: "♥", color: "red" },
+      { symbol: "♦", color: "red" },
+      { symbol: "♣", color: "black" }
+    ];
+    const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    const avatarOptions = ["😀", "😎", "🤠", "🥷", "👑", "🔥", "⚡", "💎", "🎲", "🃏", "🚀", "🍀", "🎯", "🧊", "🌙", "☠️", "🛡️", "🎩"];
+    const maxRouletteHp = 3;
+    const rouletteItems = {
+      cigarette: { icon: "🚬", name: "Thuốc lá" },
+      scissors: { icon: "✂️", name: "Cây kéo" },
+      cuffs: { icon: "⛓️", name: "Còng tay" },
+      beer: { icon: "🍺", name: "Ly bia" }
+    };
+    const rouletteItemIds = Object.keys(rouletteItems);
+    const modeNames = {
+      baicao: "Bài Cào",
+      roulette: "Cò quay nga"
+    };
+
+    const state = {
+      mode: "",
+      players: [],
+      round: [],
+      lockedResults: false,
+      isDealing: false,
+      showDealIn: false,
+      roulette: null
+    };
+
+    const welcomeScreen = document.querySelector("#welcomeScreen");
+    const setupScreen = document.querySelector("#setupScreen");
+    const tableScreen = document.querySelector("#tableScreen");
+    const rouletteScreen = document.querySelector("#rouletteScreen");
+    const rouletteWinnerScreen = document.querySelector("#rouletteWinnerScreen");
+    const playBtn = document.querySelector("#playBtn");
+    const playerForm = document.querySelector("#playerForm");
+    const playerName = document.querySelector("#playerName");
+    const avatarSelect = document.querySelector("#avatarSelect");
+    const addPlayerBtn = document.querySelector("#addPlayerBtn");
+    const playersList = document.querySelector("#playersList");
+    const setupTitle = document.querySelector("#setupTitle");
+    const setupHint = document.querySelector("#setupHint");
+    const startGameBtn = document.querySelector("#startGameBtn");
+    const tableTitle = document.querySelector("#tableTitle");
+    const gameGrid = document.querySelector("#gameGrid");
+    const deckArea = document.querySelector("#deckArea");
+    const rouletteArena = document.querySelector("#rouletteArena");
+    const rouletteTurn = document.querySelector("#rouletteTurn");
+    const rouletteShellInfo = document.querySelector("#rouletteShellInfo");
+    const rouletteMessage = document.querySelector("#rouletteMessage");
+    const shellStrip = document.querySelector("#shellStrip");
+    const beerReveal = document.querySelector("#beerReveal");
+    const shootBtn = document.querySelector("#shootBtn");
+    const itemBar = document.querySelector("#itemBar");
+    const winnerAvatar = document.querySelector("#winnerAvatar");
+    const winnerName = document.querySelector("#winnerName");
+    const winnerSubtitle = document.querySelector("#winnerSubtitle");
+
+    renderAvatarOptions();
+
+    document.querySelectorAll(".mode").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.mode = button.dataset.mode;
+        document.querySelectorAll(".mode").forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        playBtn.disabled = false;
+      });
+    });
+
+    playBtn.addEventListener("click", () => {
+      updateSetupTitle();
+      renderPlayers();
+      showScreen("setup");
+    });
+    document.querySelector("#backHomeBtn").addEventListener("click", () => showScreen("welcome"));
+    document.querySelector("#tableHomeBtn").addEventListener("click", () => showScreen("welcome"));
+    document.querySelector("#rouletteHomeBtn").addEventListener("click", () => showScreen("welcome"));
+    document.querySelector("#changePlayersBtn").addEventListener("click", () => showScreen("setup"));
+    document.querySelector("#rouletteChangePlayersBtn").addEventListener("click", () => showScreen("setup"));
+    document.querySelector("#newRoundBtn").addEventListener("click", startRound);
+    document.querySelector("#rouletteNewRoundBtn").addEventListener("click", startRoulette);
+    document.querySelector("#winnerReplayBtn").addEventListener("click", startRoulette);
+    document.querySelector("#winnerHomeBtn").addEventListener("click", () => showScreen("welcome"));
+    startGameBtn.addEventListener("click", startSelectedGame);
+    shootBtn.addEventListener("click", () => {
+      const game = state.roulette;
+      if (game?.selectedTargetId) fireRoulette(game.selectedTargetId);
+    });
+
+    playerForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const name = cleanName(playerName.value);
+      if (!name) {
+        playerName.focus();
+        return;
+      }
+      if (!avatarSelect.value) {
+        setupHint.textContent = "Không còn avatar trống, hãy xóa bớt người chơi.";
+        return;
+      }
+      if (state.players.some((player) => normalizeName(player.name) === normalizeName(name))) {
+        setupHint.textContent = "Tên người chơi đã có rồi, hãy đặt tên khác.";
+        playerName.focus();
+        return;
+      }
+      if (state.players.some((player) => player.avatar === avatarSelect.value)) {
+        setupHint.textContent = "Avatar này đã có người chọn, hãy chọn avatar khác.";
+        renderAvatarOptions();
+        return;
+      }
+
+      state.players.push({
+        id: makeId(),
+        name,
+        avatar: avatarSelect.value
+      });
+      playerName.value = "";
+      renderPlayers();
+      playerName.focus();
+    });
+
+    function showScreen(screen) {
+      welcomeScreen.classList.toggle("active", screen === "welcome");
+      setupScreen.classList.toggle("active", screen === "setup");
+      tableScreen.classList.toggle("active", screen === "table");
+      rouletteScreen.classList.toggle("active", screen === "roulette");
+      rouletteWinnerScreen.classList.toggle("active", screen === "rouletteWinner");
+      if (screen === "setup") {
+        updateSetupTitle();
+        renderPlayers();
+      }
+    }
+
+    function renderPlayers() {
+      renderAvatarOptions();
+      playersList.innerHTML = "";
+      state.players.forEach((player) => {
+        const item = document.createElement("div");
+        item.className = "mini-player";
+        item.innerHTML = `
+          <span class="avatar">${player.avatar}</span>
+          <strong>${escapeHtml(player.name)}</strong>
+          <button class="remove" type="button" aria-label="Xóa người chơi">×</button>
+        `;
+        item.querySelector(".remove").addEventListener("click", () => {
+          state.players = state.players.filter((current) => current.id !== player.id);
+          renderPlayers();
+        });
+        playersList.append(item);
+      });
+
+      const enoughPlayers = state.players.length >= 2;
+      startGameBtn.disabled = !enoughPlayers;
+      setupHint.textContent = enoughPlayers
+        ? `${state.players.length} người chơi đã sẵn sàng cho ${modeNames[state.mode] || "trò chơi"}.`
+        : "Cần ít nhất 2 người chơi để bắt đầu.";
+    }
+
+    function renderAvatarOptions() {
+      const usedAvatars = new Set(state.players.map((player) => player.avatar));
+      const firstFreeAvatar = avatarOptions.find((avatar) => !usedAvatars.has(avatar));
+      avatarSelect.innerHTML = "";
+
+      avatarOptions.forEach((avatar) => {
+        const option = document.createElement("option");
+        option.value = avatar;
+        option.textContent = usedAvatars.has(avatar) ? `${avatar} đã chọn` : avatar;
+        option.disabled = usedAvatars.has(avatar);
+        avatarSelect.append(option);
+      });
+
+      avatarSelect.value = firstFreeAvatar || "";
+      avatarSelect.disabled = !firstFreeAvatar;
+      addPlayerBtn.disabled = !firstFreeAvatar;
+    }
+
+    function updateSetupTitle() {
+      setupTitle.textContent = `Thêm người chơi - ${modeNames[state.mode] || "Chọn chế độ"}`;
+    }
+
+    function startSelectedGame() {
+      if (state.mode === "roulette") {
+        startRoulette();
+        return;
+      }
+      startRound();
+    }
+
+    function startRound() {
+      if (state.players.length < 2) return;
+      tableTitle.textContent = modeNames.baicao;
+
+      const neededCards = state.players.length * 3;
+      if (neededCards > 52) {
+        showScreen("setup");
+        setupHint.textContent = "Bộ bài 52 lá chỉ đủ tối đa 17 người chơi.";
+        return;
+      }
+
+      const deck = shuffle(createDeck());
+      state.lockedResults = false;
+      state.isDealing = true;
+      state.showDealIn = true;
+      state.round = state.players.map((player, playerIndex) => ({
+        ...player,
+        cards: deck.slice(playerIndex * 3, playerIndex * 3 + 3),
+        revealed: [false, false, false],
+        currentPoints: 0,
+        finalTotal: 0,
+        finalPoints: 0,
+        isBaCao: false,
+        rank: null,
+        label: "",
+        justRevealed: null
+      }));
+
+      showScreen("table");
+      deckArea.classList.add("dealing");
+      renderTable();
+      requestAnimationFrame(animateDeal);
+    }
+
+    function createDeck() {
+      return suits.flatMap((suit) => ranks.map((rank) => ({
+        rank,
+        suit: suit.symbol,
+        color: suit.color,
+        value: cardValue(rank)
+      })));
+    }
+
+    function shuffle(cards) {
+      const deck = [...cards];
+      for (let index = deck.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [deck[index], deck[swapIndex]] = [deck[swapIndex], deck[index]];
+      }
+      return deck;
+    }
+
+    function cardValue(rank) {
+      if (rank === "A") return 1;
+      if (["J", "Q", "K"].includes(rank)) return 0;
+      return Number(rank);
+    }
+
+    function rawTotal(cards) {
+      return cards.reduce((sum, card) => sum + card.value, 0);
+    }
+
+    function pointFromCards(cards) {
+      return rawTotal(cards) % 10;
+    }
+
+    function isBuTotal(total) {
+      return total === 10 || total === 20 || total === 30;
+    }
+
+    function isBaCao(cards) {
+      return cards.every((card) => ["J", "Q", "K"].includes(card.rank));
+    }
+
+    function renderTable() {
+      gameGrid.innerHTML = "";
+
+      state.round.forEach((player, playerIndex) => {
+        const cardWrap = document.createElement("article");
+        cardWrap.className = "player-card";
+
+        const statusText = player.revealed.every(Boolean)
+          ? finalStatusText(player)
+          : "Bấm từng lá để lật bài";
+
+        cardWrap.innerHTML = `
+          <div class="badge ${player.label === "LOSER" ? "loser" : ""} ${player.label ? "show" : ""}">${player.label}</div>
+          <div class="player-head">
+            <span class="avatar">${player.avatar}</span>
+            <div>
+              <h3 class="player-name">${escapeHtml(player.name)}</h3>
+              <p class="score">Nút hiện tại: <strong>${player.currentPoints}</strong></p>
+            </div>
+          </div>
+          <div class="cards"></div>
+          <p class="status ${player.revealed.every(Boolean) ? "" : "wait"}">${statusText}</p>
+        `;
+
+        const cards = cardWrap.querySelector(".cards");
+        player.cards.forEach((card, cardIndex) => {
+          const button = document.createElement("button");
+          const isRevealed = player.revealed[cardIndex];
+          const justFlipped = player.justRevealed === cardIndex;
+          button.type = "button";
+          button.className = `card ${state.showDealIn ? "deal-in" : ""} ${isRevealed ? "revealed" : "hidden"} ${justFlipped ? "just-flipped" : ""}`;
+          button.style.animationDelay = `${(playerIndex * 3 + cardIndex) * 0.08}s`;
+          button.setAttribute("aria-label", isRevealed ? `${card.rank}${card.suit}` : "Lá bài úp");
+          button.addEventListener("click", () => revealCard(playerIndex, cardIndex));
+          button.innerHTML = `
+            <span class="card-inner">
+              <span class="card-face card-front">
+                <span class="rank ${card.color}">${card.rank}</span>
+                <span class="suit ${card.color}">${card.suit}</span>
+              </span>
+              <span class="card-face card-back"></span>
+            </span>
+          `;
+
+          cards.append(button);
+        });
+
+        gameGrid.append(cardWrap);
+      });
+    }
+
+    function revealCard(playerIndex, cardIndex) {
+      const player = state.round[playerIndex];
+      if (!player || player.revealed[cardIndex] || state.lockedResults || state.isDealing) return;
+
+      player.revealed[cardIndex] = true;
+      player.justRevealed = cardIndex;
+      const revealedCards = player.cards.filter((_, index) => player.revealed[index]);
+      player.currentPoints = pointFromCards(revealedCards);
+
+      if (allCardsRevealed()) {
+        settleResults();
+      }
+
+      renderTable();
+      player.justRevealed = null;
+    }
+
+    function allCardsRevealed() {
+      return state.round.every((player) => player.revealed.every(Boolean));
+    }
+
+    function settleResults() {
+      state.lockedResults = true;
+      state.round.forEach((player) => {
+        player.finalTotal = rawTotal(player.cards);
+        player.finalPoints = player.finalTotal % 10;
+        player.currentPoints = player.finalPoints;
+        player.isBaCao = isBaCao(player.cards);
+      });
+
+      const sorted = [...state.round].sort((a, b) => {
+        if (a.isBaCao !== b.isBaCao) return a.isBaCao ? -1 : 1;
+        return b.finalPoints - a.finalPoints;
+      });
+
+      sorted.forEach((player, index) => {
+        player.rank = index + 1;
+        if (index === 0) player.label = "WIN";
+        else if (index === sorted.length - 1) player.label = "LOSER";
+        else if (index === 1) player.label = "2nd";
+        else if (index === 2) player.label = "3th";
+        else player.label = `${index + 1}th`;
+      });
+    }
+
+    function finalStatusText(player) {
+      const total = player.finalTotal || rawTotal(player.cards);
+      const points = total % 10;
+      if (isBaCao(player.cards)) return "Ba cào - lớn nhất";
+      if (isBuTotal(total)) return "Bù - 0 nút";
+      return `${points} nút`;
+    }
+
+    function animateDeal() {
+      const deck = deckArea.querySelector(".deck");
+      const targets = [...gameGrid.querySelectorAll(".card")];
+      if (!deck || targets.length === 0) {
+        deckArea.classList.remove("dealing");
+        state.isDealing = false;
+        state.showDealIn = false;
+        return;
+      }
+
+      const deckRect = deck.getBoundingClientRect();
+      targets.forEach((target, index) => {
+        const targetRect = target.getBoundingClientRect();
+        const flyCard = document.createElement("div");
+        const width = Math.min(targetRect.width, 72);
+        const height = Math.min(targetRect.height, 104);
+        const startX = deckRect.left + deckRect.width / 2 - width / 2;
+        const startY = deckRect.top + deckRect.height / 2 - height / 2;
+        const endX = targetRect.left + targetRect.width / 2 - width / 2;
+        const endY = targetRect.top + targetRect.height / 2 - height / 2;
+
+        flyCard.className = "flying-card";
+        flyCard.style.setProperty("--x", `${startX}px`);
+        flyCard.style.setProperty("--y", `${startY}px`);
+        flyCard.style.setProperty("--tx", `${endX - startX}px`);
+        flyCard.style.setProperty("--ty", `${endY - startY}px`);
+        flyCard.style.setProperty("--rot", `${index % 2 === 0 ? -8 : 8}deg`);
+        flyCard.style.setProperty("--delay", `${index * 0.08}s`);
+        flyCard.style.setProperty("--fly-w", `${width}px`);
+        flyCard.style.setProperty("--fly-h", `${height}px`);
+        document.body.append(flyCard);
+        flyCard.addEventListener("animationend", () => flyCard.remove(), { once: true });
+      });
+
+      const totalTime = (targets.length - 1) * 80 + 760;
+      setTimeout(() => {
+        deckArea.classList.remove("dealing");
+        state.isDealing = false;
+        state.showDealIn = false;
+      }, totalTime);
+    }
+
+    function startRoulette() {
+      if (state.players.length < 2) return;
+
+      const roundId = makeId();
+      state.roulette = {
+        roundId,
+        players: state.players.map((player) => ({
+          ...player,
+          hp: maxRouletteHp,
+          alive: true,
+          items: drawRouletteItems(2),
+          cuffedTurns: 0,
+          powerShot: false,
+          hitFlash: false,
+          deadFlash: false
+        })),
+        currentIndex: 0,
+        shells: [],
+        liveCount: 0,
+        blankCount: 0,
+        peekedShell: null,
+        beerRevealShell: null,
+        beerRevealAnimate: false,
+        selectedTargetId: null,
+        gunAngle: -90,
+        previousGunAngle: -90,
+        locked: false,
+        shooting: false,
+        gameOver: false,
+        winnerId: null,
+        message: ""
+      };
+
+      const reloadText = reloadShotgun(state.roulette);
+      state.roulette.selectedTargetId = defaultRouletteTargetId(state.roulette.currentIndex);
+      state.roulette.message = `${reloadText} Chọn người muốn bắn rồi bấm Bắn.`;
+      prepareRouletteTurn();
+      showScreen("roulette");
+      renderRoulette();
+    }
+
+    function reloadShotgun(game) {
+      const size = randomInt(4, 6);
+      const liveCount = randomInt(1, size - 1);
+      const blankCount = size - liveCount;
+      game.liveCount = liveCount;
+      game.blankCount = blankCount;
+      game.peekedShell = null;
+      game.beerRevealShell = null;
+      game.beerRevealAnimate = false;
+      game.shells = shuffle([
+        ...Array(liveCount).fill("live"),
+        ...Array(blankCount).fill("blank")
+      ]);
+      return `Nạp ${liveCount} đạn thật và ${blankCount} đạn lép.`;
+    }
+
+    function renderRoulette() {
+      const game = state.roulette;
+      if (!game) return;
+
+      const shooter = getCurrentRoulettePlayer();
+      const selectedTarget = game.players.find((player) => player.id === game.selectedTargetId);
+
+      rouletteTurn.innerHTML = shooter
+        ? `Lượt: <span class="turn-name">${escapeHtml(shooter.avatar)} ${escapeHtml(shooter.name)}</span>`
+        : "Ván đã kết thúc";
+      rouletteShellInfo.textContent = `Đạn còn: ${game.shells.length} | Thật ${game.liveCount} / Lép ${game.blankCount}`;
+      rouletteMessage.textContent = game.message;
+      rouletteMessage.classList.toggle("wait", !game.message.includes("Đạn thật") && !game.message.includes("thắng"));
+      shootBtn.disabled = game.locked || game.gameOver || !shooter || !selectedTarget || !selectedTarget.alive;
+      shootBtn.textContent = selectedTarget ? `Bắn ${selectedTarget.name}` : "Bắn";
+
+      shellStrip.innerHTML = `
+        <span class="shell-label">Thứ tự đạn bị ẩn</span>
+        ${game.shells.map((shell, index) => `<span class="shell ${peekShellClass(shell, index)}" aria-label="Đạn chưa biết"></span>`).join("")}
+      `;
+      renderBeerReveal(game.beerRevealShell, game.beerRevealAnimate);
+      game.beerRevealAnimate = false;
+
+      renderRouletteItems(shooter, selectedTarget);
+
+      rouletteArena.innerHTML = '<div class="table-circle"></div>';
+      game.players.forEach((player, index) => {
+        const angle = -90 + (index * 360) / game.players.length;
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = [
+          "roulette-player",
+          player.alive ? "alive" : "out",
+          shooter?.id === player.id ? "current" : "",
+          game.selectedTargetId === player.id ? "target" : "",
+          game.gameOver && player.alive ? "winner" : "",
+          player.deadFlash ? "dead-now" : ""
+        ].filter(Boolean).join(" ");
+        item.style.setProperty("--slot-angle", `${angle}deg`);
+        item.style.setProperty("--slot-angle-back", `${-angle}deg`);
+        item.disabled = game.locked || game.gameOver || !player.alive;
+        item.innerHTML = `
+          <span class="avatar">${player.avatar}</span>
+          <strong>${escapeHtml(player.name)}</strong>
+          <span class="hp">${hearts(player.hp)}</span>
+          <span class="player-state">${playerStateText(player, shooter)}</span>
+          ${player.powerShot ? '<span class="power-tag">x2 damage</span>' : ""}
+          ${player.hitFlash ? '<span class="blood-splash"></span>' : ""}
+        `;
+        item.addEventListener("click", () => selectRouletteTarget(player.id));
+        rouletteArena.append(item);
+      });
+
+      const gun = document.createElement("div");
+      gun.className = `shotgun-stage ${game.shooting ? "shooting" : ""}`;
+      gun.style.setProperty("--gun-angle", `${game.gunAngle}deg`);
+      gun.style.setProperty("--gun-from", `${game.previousGunAngle}deg`);
+      gun.innerHTML = `
+        <div class="shotgun" aria-label="Shotgun">
+          <span class="stock"></span>
+          <span class="barrel"></span>
+          <span class="barrel second"></span>
+          <span class="grip"></span>
+          <span class="trigger"></span>
+          <span class="muzzle-flash"></span>
+        </div>
+      `;
+      rouletteArena.append(gun);
+    }
+
+    function renderBeerReveal(shell, animate) {
+      if (!shell) {
+        beerReveal.className = "beer-reveal";
+        beerReveal.innerHTML = "";
+        beerReveal.dataset.shell = "";
+        return;
+      }
+
+      if (!animate && beerReveal.dataset.shell === shell && beerReveal.innerHTML) {
+        beerReveal.classList.add("show");
+        return;
+      }
+
+      beerReveal.dataset.shell = shell;
+      beerReveal.className = "beer-reveal show";
+      beerReveal.innerHTML = shell
+        ? `
+          <div class="reveal-shell ${shell === "live" ? "live" : "blank"} ${animate ? "animate" : ""}">
+            ${animate ? '<span class="beer-bubble"></span><span class="beer-bubble"></span><span class="beer-bubble"></span>' : ""}
+          </div>
+        `
+        : "";
+    }
+
+    function renderRouletteItems(shooter, selectedTarget) {
+      itemBar.innerHTML = "";
+      const label = document.createElement("span");
+      label.className = "shell-label";
+      label.textContent = "Vật phẩm";
+      itemBar.append(label);
+
+      if (!shooter || shooter.items.length === 0) {
+        const empty = document.createElement("span");
+        empty.className = "hint";
+        empty.textContent = "Hết vật phẩm";
+        itemBar.append(empty);
+        return;
+      }
+
+      shooter.items.forEach((itemId, index) => {
+        const item = rouletteItems[itemId];
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "item-btn";
+        button.innerHTML = `<span>${item.icon}</span>${item.name}`;
+        button.disabled = !canUseRouletteItem(itemId, shooter, selectedTarget);
+        button.addEventListener("click", () => useRouletteItem(index));
+        itemBar.append(button);
+      });
+    }
+
+    function canUseRouletteItem(itemId, shooter, selectedTarget) {
+      const game = state.roulette;
+      if (!game || !shooter || game.locked || game.gameOver) return false;
+      if (itemId === "scissors" && shooter.powerShot) return false;
+      if (itemId === "cuffs") return Boolean(selectedTarget?.alive && selectedTarget.id !== shooter.id);
+      return true;
+    }
+
+    function useRouletteItem(itemIndex) {
+      const game = state.roulette;
+      const shooter = getCurrentRoulettePlayer();
+      if (!game || !shooter || game.locked || game.gameOver) return;
+
+      const itemId = shooter.items[itemIndex];
+      const selectedTarget = game.players.find((player) => player.id === game.selectedTargetId);
+      if (!itemId || !canUseRouletteItem(itemId, shooter, selectedTarget)) return;
+
+      if (itemId === "cigarette") {
+        if (shooter.hp >= maxRouletteHp) {
+          game.message = `${shooter.name} đang đầy máu, thuốc lá chưa cần dùng.`;
+          renderRoulette();
+          return;
+        }
+        shooter.hp = Math.min(maxRouletteHp, shooter.hp + 1);
+        consumeRouletteItem(shooter, itemIndex);
+        game.message = `${shooter.name} dùng thuốc lá và hồi 1 máu.`;
+      }
+
+      if (itemId === "scissors") {
+        shooter.powerShot = true;
+        consumeRouletteItem(shooter, itemIndex);
+        game.message = `${shooter.name} dùng kéo cắt nòng súng. Phát đạn thật kế tiếp gây 2 damage.`;
+      }
+
+      if (itemId === "cuffs" && selectedTarget) {
+        selectedTarget.cuffedTurns += 1;
+        consumeRouletteItem(shooter, itemIndex);
+        game.message = `${shooter.name} còng tay ${selectedTarget.name}. Người đó sẽ mất lượt kế tiếp.`;
+      }
+
+      if (itemId === "beer") {
+        if (game.shells.length === 0) {
+          game.message = reloadShotgun(game);
+        }
+        game.peekedShell = game.shells[0] || null;
+        game.beerRevealShell = game.peekedShell;
+        game.beerRevealAnimate = Boolean(game.peekedShell);
+        consumeRouletteItem(shooter, itemIndex);
+        game.message = game.peekedShell
+          ? `${shooter.name} uống bia.`
+          : `${shooter.name} uống bia nhưng súng chưa có đạn.`;
+      }
+
+      renderRoulette();
+    }
+
+    function consumeRouletteItem(player, itemIndex) {
+      player.items.splice(itemIndex, 1);
+    }
+
+    function scheduleHitFlashClear(playerId) {
+      const roundId = state.roulette?.roundId;
+      setTimeout(() => {
+        const game = state.roulette;
+        if (!game || game.roundId !== roundId) return;
+        const player = game.players.find((current) => current.id === playerId);
+        if (!player) return;
+        player.hitFlash = false;
+        renderRoulette();
+      }, 720);
+    }
+
+    function scheduleDeathFlashClear(playerId) {
+      const roundId = state.roulette?.roundId;
+      setTimeout(() => {
+        const game = state.roulette;
+        if (!game || game.roundId !== roundId) return;
+        const player = game.players.find((current) => current.id === playerId);
+        if (!player) return;
+        player.deadFlash = false;
+        renderRoulette();
+      }, 1000);
+    }
+
+    function scheduleRouletteWinnerScreen(roundId) {
+      setTimeout(() => {
+        const game = state.roulette;
+        if (!game || game.roundId !== roundId || !game.gameOver) return;
+        renderRouletteWinner();
+        showScreen("rouletteWinner");
+      }, 1100);
+    }
+
+    function renderRouletteWinner() {
+      const game = state.roulette;
+      const winner = game?.players.find((player) => player.id === game.winnerId);
+      winnerAvatar.textContent = winner?.avatar || "👑";
+      winnerName.textContent = winner ? winner.name : "Không có người thắng";
+      winnerSubtitle.textContent = winner
+        ? "Sống sót cuối cùng trong Cò quay nga."
+        : "Tất cả người chơi đã bị loại.";
+    }
+
+    function selectRouletteTarget(playerId) {
+      const game = state.roulette;
+      const shooter = getCurrentRoulettePlayer();
+      const target = game?.players.find((player) => player.id === playerId);
+      if (!game || !shooter || game.locked || game.gameOver || !target?.alive) return;
+
+      game.selectedTargetId = target.id;
+      game.message = target.id === shooter.id
+        ? `${shooter.name} đang tự nhắm chính mình.`
+        : `${shooter.name} đang nhắm ${target.name}.`;
+      renderRoulette();
+    }
+
+    function fireRoulette(targetId) {
+      const game = state.roulette;
+      const shooter = getCurrentRoulettePlayer();
+      const target = game?.players.find((player) => player.id === targetId);
+      if (!game || !shooter || !target?.alive || game.locked || game.gameOver) return;
+
+      if (game.shells.length === 0) {
+        game.message = reloadShotgun(game);
+      }
+
+      const shotRoundId = game.roundId;
+      game.locked = true;
+      game.shooting = true;
+      game.selectedTargetId = target.id;
+      game.previousGunAngle = game.gunAngle;
+      game.gunAngle = angleForRoulettePlayer(target.id);
+      game.message = `${shooter.name} bóp cò về phía ${target.name}...`;
+      renderRoulette();
+
+      setTimeout(() => {
+        if (state.roulette?.roundId !== shotRoundId) return;
+        resolveRouletteShot(shooter.id, target.id);
+      }, 760);
+    }
+
+    function resolveRouletteShot(shooterId, targetId) {
+      const game = state.roulette;
+      if (!game) return;
+
+      const shooterIndex = game.players.findIndex((player) => player.id === shooterId);
+      const shooter = game.players[shooterIndex];
+      const target = game.players.find((player) => player.id === targetId);
+      const shell = game.shells.shift();
+      const isLive = shell === "live";
+      const damage = shooter?.powerShot ? 2 : 1;
+      const usedPowerShot = Boolean(shooter?.powerShot);
+      let message = "";
+
+      if (shooter) shooter.powerShot = false;
+      if (isLive) game.liveCount = Math.max(0, game.liveCount - 1);
+      else game.blankCount = Math.max(0, game.blankCount - 1);
+      game.peekedShell = null;
+      game.beerRevealShell = null;
+      game.beerRevealAnimate = false;
+
+      if (isLive && target) {
+        target.hp = Math.max(0, target.hp - damage);
+        target.hitFlash = true;
+        scheduleHitFlashClear(target.id);
+        if (target.hp === 0) {
+          target.alive = false;
+          target.deadFlash = true;
+          scheduleDeathFlashClear(target.id);
+          message = `Đạn thật! ${usedPowerShot ? "Nòng súng đã cắt gây 2 damage. " : ""}${target.name} bị loại.`;
+        } else {
+          message = `Đạn thật! ${target.name} mất ${damage} máu.`;
+        }
+      } else if (target) {
+        message = `Đạn lép. ${target.name} không mất máu.`;
+        if (usedPowerShot) message += " Lượt cắt nòng súng đã hết.";
+      }
+
+      if (aliveCount() <= 1) {
+        const winner = game.players.find((player) => player.alive);
+        game.gameOver = true;
+        game.locked = true;
+        game.shooting = false;
+        game.winnerId = winner?.id || null;
+        game.previousGunAngle = game.gunAngle;
+        game.message = winner ? `${message} ${winner.name} thắng!` : `${message} Không còn người thắng.`;
+        renderRoulette();
+        scheduleRouletteWinnerScreen(game.roundId);
+        return;
+      }
+
+      let reloadText = "";
+      if (game.shells.length === 0) {
+        reloadText = ` ${reloadShotgun(game)}`;
+      }
+
+      const selfBlankBonus = !isLive && shooter?.id === targetId && shooter.alive;
+      if (selfBlankBonus) {
+        game.currentIndex = shooterIndex;
+        message += " Bắn mình ra đạn lép nên được thêm lượt.";
+      } else {
+        game.currentIndex = nextAliveIndex(shooterIndex);
+      }
+
+      game.locked = false;
+      game.shooting = false;
+      prepareRouletteTurn(`${message}${reloadText}`);
+      renderRoulette();
+    }
+
+    function getCurrentRoulettePlayer() {
+      const game = state.roulette;
+      if (!game) return null;
+      const player = game.players[game.currentIndex];
+      if (player?.alive) return player;
+      const nextIndex = nextAliveIndex(game.currentIndex);
+      game.currentIndex = nextIndex;
+      return game.players[nextIndex] || null;
+    }
+
+    function nextAliveIndex(fromIndex) {
+      const game = state.roulette;
+      if (!game) return 0;
+      for (let step = 1; step <= game.players.length; step += 1) {
+        const index = (fromIndex + step) % game.players.length;
+        if (game.players[index].alive) return index;
+      }
+      return fromIndex;
+    }
+
+    function prepareRouletteTurn(baseMessage = state.roulette?.message || "") {
+      const game = state.roulette;
+      if (!game || game.gameOver) return;
+
+      const notes = [];
+      if (!game.players[game.currentIndex]?.alive) {
+        game.currentIndex = nextAliveIndex(game.currentIndex);
+      }
+
+      for (let guard = 0; guard < game.players.length; guard += 1) {
+        const player = game.players[game.currentIndex];
+        if (!player || !player.alive) {
+          game.currentIndex = nextAliveIndex(game.currentIndex);
+          continue;
+        }
+        if (player.cuffedTurns <= 0) break;
+
+        player.cuffedTurns -= 1;
+        notes.push(`${player.name} bị còng tay nên mất lượt.`);
+        game.currentIndex = nextAliveIndex(game.currentIndex);
+      }
+
+      game.selectedTargetId = defaultRouletteTargetId(game.currentIndex);
+      game.message = [baseMessage, ...notes].filter(Boolean).join(" ");
+    }
+
+    function defaultRouletteTargetId(currentIndex) {
+      const game = state.roulette;
+      if (!game) return null;
+      const current = game.players[currentIndex];
+      return current?.alive ? current.id : null;
+    }
+
+    function drawRouletteItems(count) {
+      return Array.from({ length: count }, () => rouletteItemIds[randomInt(0, rouletteItemIds.length - 1)]);
+    }
+
+    function peekShellClass(shell, index) {
+      if (index !== 0 || !state.roulette?.peekedShell) return "";
+      return shell === "live" ? "peek-live" : "peek-blank";
+    }
+
+    function angleForRoulettePlayer(playerId) {
+      const game = state.roulette;
+      if (!game || !playerId) return -90;
+      const index = game.players.findIndex((player) => player.id === playerId);
+      if (index < 0) return -90;
+      return -90 + (index * 360) / game.players.length;
+    }
+
+    function aliveCount() {
+      return state.roulette?.players.filter((player) => player.alive).length || 0;
+    }
+
+    function hearts(hp) {
+      return "♥".repeat(hp) || "hết máu";
+    }
+
+    function playerStateText(player, shooter) {
+      if (!player.alive) return "Bị loại";
+      if (player.cuffedTurns > 0) return "Bị còng tay";
+      if (player.id === shooter?.id) return "Đang cầm súng";
+      return "Có thể nhắm";
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function cleanName(text) {
+      return text.trim().replace(/\s+/g, " ");
+    }
+
+    function normalizeName(text) {
+      return cleanName(text).toLocaleLowerCase("vi");
+    }
+
+    function makeId() {
+      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+      }
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+  </script>
+</body>
+</html>
