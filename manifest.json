@@ -1,0 +1,26 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Các Trò Giải Trí Hay",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Các Trò Giải Trí Hay",
+  "start_url": "/",
+  "theme_color": "#101614",
+  "icons": [
+    {
+      "src": "https://tangphuocnhan20099-oss.github.io/CE67AE0E-C1CF-4EE0-9A29-94DED07C1174.png",
+      "type": "image/png",
+      "sizes": "1254x1254",
+      "isSquare": true,
+      "isPng": true,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 1254,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
+    }
+  ]
+}
