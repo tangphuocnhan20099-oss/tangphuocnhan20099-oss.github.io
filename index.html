@@ -6499,5 +6499,10 @@
       return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
   </script>
+  <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js");
+}
+</script>
 </body>
 </html>
